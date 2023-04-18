@@ -14,7 +14,7 @@ on:
 
 jobs:
   phpcs:
-    name: "Coding Standards"
+    name: "Code quality control"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,6 +54,7 @@ jobs:
         id: phpcsCheck
         uses: tinovyatkin/action-php-codesniffer@v1
         with:
-          files: "**.php"
+          files: "**"
+          scope: files
           phpcs_path: rezolve_rce_coding_standard/vendor/bin/phpcs --ignore=rezolve_rce_coding_standard/ --runtime-set ignore_warnings_on_exit 1
           standard: rezolve_rce_coding_standard/src/ruleset.xml

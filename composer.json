@@ -20,10 +20,6 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://repo.magento.com"
-        },
-        {
             "type": "vcs",
             "url": "git@github.com:rezolved/rezolve_rce_coding_standard.git"
         }

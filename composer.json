@@ -1,0 +1,37 @@
+{
+    "name": "rustam-mavlyanov/actions-test",
+    "version": "1.0.0",
+    "require": {
+        "magento/framework": "103.*"
+    },
+    "require-dev": {
+        "rezolve/rezolve_rce_coding_standard": "dev-main",
+        "friendsofphp/php-cs-fixer": "*"
+    },
+    "license": [
+        "Proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Rezolve\\ClaroShopIntegration\\": ""
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:rezolved/rezolve_rce_coding_standard.git"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "magento/composer-dependency-version-audit-plugin": false
+        }
+    }
+}

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - "master"
+    paths:
+      - "**.php"
+      - "**.phtml"
   pull_request:
     paths:
       - "**.php"

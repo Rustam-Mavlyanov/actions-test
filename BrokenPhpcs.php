@@ -5,3 +5,6 @@ function Ololo ($item) {
 }
 
 class Vasya {}
+
+
+

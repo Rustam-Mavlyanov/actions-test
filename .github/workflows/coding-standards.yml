@@ -10,13 +10,14 @@ on:
       - "**.phtml"
 
 jobs:
-  strategy:
-    matrix:
-      php-version:
-        - "8.1"
-
   phpcs:
+    name: "Coding Standards"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
     env:
       PHP_VERSION_CODE_QUALITY: ${{ secrets.PHP_VERSION_CODE_QUALITY }}
     steps:

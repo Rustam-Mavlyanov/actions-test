@@ -31,8 +31,17 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           tools: composer:v2
 
-      - name: "Install locked dependencies with composer"
-        run: "composer install --ansi --no-interaction --no-progress"
+      - name: Install Rezolve Coding Standard
+        run: git clone https://github.com/rezolved/rezolve_rce_coding_standard.git && cd rezolve_rce_coding_standard && composer install && cd ..
 
       - id: files
         uses: jitterbit/get-changed-files@v1
+
+      - name: Run Phpcs
+        id: phpcsCheck
+        uses: tinovyatkin/action-php-codesniffer@v1
+        with:
+          files: "**"
+          scope: files
+          phpcs_path: rezolve_rce_coding_standard/vendor/bin/phpcs --ignore=rezolve_rce_coding_standard/ --runtime-set ignore_warnings_on_exit 1
+          standard: rezolve_rce_coding_standard/src/ruleset.xml

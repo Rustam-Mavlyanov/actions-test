@@ -4,16 +4,13 @@
     "require": {
     },
     "require-dev": {
-        "rezolve/rezolve_rce_coding_standard": "dev-main",
+        "mavlyan/rezolve_rce_coding_standard": "dev-main",
         "friendsofphp/php-cs-fixer": "*"
     },
     "license": [
         "Proprietary"
     ],
     "autoload": {
-        "files": [
-            "registration.php"
-        ],
         "psr-4": {
             "Rezolve\\ClaroShopIntegration\\": ""
         }
@@ -21,7 +18,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:rezolved/rezolve_rce_coding_standard.git"
+            "url": "git@github.com:Rustam-Mavlyanov/rezolve_rce_coding_standard.git"
         }
     ],
     "config": {

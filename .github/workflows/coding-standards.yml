@@ -41,9 +41,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - run: |
-          for changed_file in ${{ steps.files.outputs.all }}; do
-            echo "Check file ${changed_file}."
-          done
+          echo "Check file ${{ secrets.PHP_VERSION_CODE_QUALITY }}." && echo ${{ env.PHP_VERSION_CODE_QUALITY }}
 
       - name: Run Rector
         id: rectorCheck

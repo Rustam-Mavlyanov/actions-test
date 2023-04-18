@@ -40,6 +40,11 @@ jobs:
       - id: files
         uses: jitterbit/get-changed-files@v1
 
+      - run: |
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            echo "Check file ${changed_file}."
+          done
+
       - name: Run Rector
         id: rectorCheck
         continue-on-error: true

@@ -7,7 +7,7 @@ on:
       - "**.phtml"
 
 jobs:
-  phpcs:
+  code-check:
     runs-on: ubuntu-latest
     env:
       PHP_VERSION_CODE_QUALITY: ${{ secrets.PHP_VERSION_CODE_QUALITY }}
@@ -32,9 +32,11 @@ jobs:
         continue-on-error: true
         run: cp -r rezolve_rce_coding_standard/src/rector.php rector.php && rezolve_rce_coding_standard/vendor/bin/rector process --ansi --no-progress-bar --dry-run ${{ steps.files.outputs.added_modified }}
 
-      - name: Validate Rector
-        if: ${{steps.rectorCheck.outcome == 'failure'}}
-        run: echo "::warning title='Rector warning'::Rector found errors. Please check the output."
+      - if: ${{steps.rectorCheck.outcome == 'failure'}}
+        run: echo "::warning title='Rector warning'::Failure! Please check the output."
+
+      - if: ${{steps.rectorCheck.outcome != 'failure'}}
+        run: echo "Success!"
 
       - name: Run Phpcs
         id: phpcsCheck

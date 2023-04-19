@@ -31,7 +31,9 @@ jobs:
         id: rectorCheck
         continue-on-error: true
         run: cp -r rezolve_rce_coding_standard/src/rector.php rector.php && rezolve_rce_coding_standard/vendor/bin/rector process --ansi --no-progress-bar --dry-run ${{ steps.files.outputs.added_modified }}
-      - if: ${{steps.rectorCheck.outcome == 'failure'}}
+
+      - name: Validate Rector
+        if: ${{steps.rectorCheck.outcome == 'failure'}}
         run: echo "::warning title='Rector warning'::Rector found errors. Please check the output."
 
       - name: Run Phpcs

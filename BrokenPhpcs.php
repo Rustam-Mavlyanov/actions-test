@@ -1,6 +1,6 @@
 <?php
 
-sukablya
+kurwa
 
 
 function Ololo    ( $item ) {

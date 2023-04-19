@@ -1,12 +1,6 @@
 name: Coding Standards
 
 on:
-  push:
-    branches:
-      - "master"
-    paths:
-      - "**.php"
-      - "**.phtml"
   pull_request:
     paths:
       - "**.php"
@@ -14,13 +8,7 @@ on:
 
 jobs:
   phpcs:
-    name: "Coding Standards"
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version:
-          - "8.1"
-
     env:
       PHP_VERSION_CODE_QUALITY: ${{ secrets.PHP_VERSION_CODE_QUALITY }}
     steps:
@@ -28,10 +16,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Set up PHP"
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
-          php-version: "${{ matrix.php-version }}"
+          php-version: ${{ env.PHP_VERSION_CODE_QUALITY }}
           tools: composer:v2
 
       - name: Install Rezolve Coding Standard
@@ -40,20 +27,18 @@ jobs:
       - id: files
         uses: jitterbit/get-changed-files@v1
 
-      - run: |
-          for changed_file in ${{ steps.files.outputs.all }}; do
-            echo "Check file ${changed_file}."
-          done
+      - name: Run Phpcs
+        id: phpcsCheck
+        uses: tinovyatkin/action-php-codesniffer@v1
+        with:
+          files: "**"
+          scope: files
+          phpcs_path: rezolve_rce_coding_standard/vendor/bin/phpcs --ignore=rezolve_rce_coding_standard/ --runtime-set ignore_warnings_on_exit 1
+          standard: rezolve_rce_coding_standard/src/ruleset.xml
 
       - name: Run Rector
         id: rectorCheck
         continue-on-error: true
         run: cp -r rezolve_rce_coding_standard/src/rector.php rector.php && rezolve_rce_coding_standard/vendor/bin/rector process --ansi --no-progress-bar --dry-run ${{ steps.files.outputs.added_modified }}
-
-      - name: Run Phpcs
-        id: phpcsCheck
-        uses: tinovyatkin/action-php-codesniffer@v1
-        with:
-          files: "**.php"
-          phpcs_path: rezolve_rce_coding_standard/vendor/bin/phpcs --ignore=rezolve_rce_coding_standard/ --runtime-set ignore_warnings_on_exit 1
-          standard: rezolve_rce_coding_standard/src/ruleset.xml
+      - if: ${{steps.rectorCheck.outcome == 'failure'}}
+        run: echo "::warning title='Rector warning'::Rector found errors. Please check the output."

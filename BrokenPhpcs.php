@@ -1,6 +1,5 @@
 <?php
 
-
 function Ololo    ( $item ) {
     $a = 1;    return $item;
 
@@ -12,7 +11,7 @@ function Ololo    ( $item ) {
 
 
 
-class Vasya {}
+class Vasya { public const loloAlol = 3;}
 
 
 

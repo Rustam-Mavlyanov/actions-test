@@ -7,7 +7,7 @@ on:
       - "**.phtml"
 
 jobs:
-  phpcs:
+  code-check:
     runs-on: ubuntu-latest
     env:
       PHP_VERSION_CODE_QUALITY: ${{ secrets.PHP_VERSION_CODE_QUALITY }}
@@ -24,8 +24,26 @@ jobs:
       - name: Install Rezolve Coding Standard
         run: git clone https://github.com/rezolved/rezolve_rce_coding_standard.git && cd rezolve_rce_coding_standard && composer install && cd ..
 
-      - id: files
-        uses: jitterbit/get-changed-files@v1
+      - name: Get changed files
+        id: files
+        uses: tj-actions/changed-files@v35
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      - name: Run Rector
+        id: rectorCheck
+        continue-on-error: true
+        run: cp -r rezolve_rce_coding_standard/src/rector.php rector.php && rezolve_rce_coding_standard/vendor/bin/rector process --ansi --no-progress-bar --dry-run ${{ steps.files.outputs.all_changed_files }}
+
+      - if: ${{steps.rectorCheck.outcome == 'failure'}}
+        run: echo "::warning title='Rector warning'::Failure! Please check the output."
+
+      - if: ${{steps.rectorCheck.outcome != 'failure'}}
+        run: echo "Success!"
 
       - name: Run Phpcs
         id: phpcsCheck
@@ -35,10 +53,3 @@ jobs:
           scope: files
           phpcs_path: rezolve_rce_coding_standard/vendor/bin/phpcs --ignore=rezolve_rce_coding_standard/ --runtime-set ignore_warnings_on_exit 1
           standard: rezolve_rce_coding_standard/src/ruleset.xml
-
-      - name: Run Rector
-        id: rectorCheck
-        continue-on-error: true
-        run: cp -r rezolve_rce_coding_standard/src/rector.php rector.php && rezolve_rce_coding_standard/vendor/bin/rector process --ansi --no-progress-bar --dry-run ${{ steps.files.outputs.added_modified }}
-      - if: ${{steps.rectorCheck.outcome == 'failure'}}
-        run: echo "::warning title='Rector warning'::Rector found errors. Please check the output."
